@@ -1,16 +1,19 @@
 (ns todo.core
   (:require
-   [hiccup.page :as page]
-   [hiccup.core :refer :all]
-   [compojure.core :refer :all]
-   [org.httpkit.server :refer [run-server]]
-   [ring.middleware.defaults :refer :all])
+    [hiccup.page :as page]
+    [hiccup.core :refer :all]
+    [compojure.core :refer :all]
+    [org.httpkit.server :refer [run-server]]
+    [ring.middleware.defaults :refer :all])
   (:gen-class))
 
 (def todos (atom [
                   {:name "Learn Clojure" :done false}
                   {:name "Buy beer" :done false}
                   ]))
+
+(defn add-todo [new-todo]
+  (swap! todos (fn [todos] (conj todos {:name new-todo :done false}))))
 
 (defn render-todos-fragment [todos]
   [:div {:id "todos"}
@@ -37,8 +40,7 @@
            (POST "/todos" req
              (let [new-todo (get (:params req) :todo-name)]
                (do
-                 (println new-todo)
-                 (swap! todos (fn [todos] (conj todos {:name new-todo :done false})))
+                 (add-todo new-todo)
                  (html (render-todos-fragment (deref todos)))))))
 
 (defn -main []
