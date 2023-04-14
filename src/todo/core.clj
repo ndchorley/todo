@@ -9,7 +9,7 @@
 
 (def todos (atom [
                   {:name "Learn Clojure" :done false}
-                  {:name "Buy beer" :done false}
+                  {:name "Buy Gin" :done false}
                   ]))
 
 (defn add-todo [new-todo]
@@ -38,7 +38,7 @@
 (defroutes myapp
            (GET "/" [] (render-whole-page (deref todos)))
            (POST "/todos" req
-             (let [new-todo (get (:params req) :todo-name)]
+             (let [new-todo (:todo-name (:params req))]
                (do
                  (add-todo new-todo)
                  (html (render-todos-fragment (deref todos)))))))
