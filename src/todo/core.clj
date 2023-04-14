@@ -29,5 +29,8 @@
 
   (run-jetty
     (fn [request]
-    {:status 200 :body (render todos)})
+      (if (= (request :request-method) :post)
+        {:status 400 :body "Boo"}
+        
+        {:status 200 :body (render todos)}))
     {:port 8080}))
