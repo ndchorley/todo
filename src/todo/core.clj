@@ -1,15 +1,16 @@
 (ns todo.core
   (:require
-   [ring.adapter.jetty :refer [run-jetty]]
    [hiccup.page :as page]
-   [hiccup.core :refer :all])
+   [hiccup.core :refer :all]
+   [compojure.core :refer :all]
+   [org.httpkit.server :refer [run-server]]
+   [ring.middleware.defaults :refer :all])
   (:gen-class))
 
 (def todos (atom [
                   {:name "Learn Clojure" :done false}
                   {:name "Buy beer" :done false}
                   ]))
-
 
 (defn render-todos-fragment [todos]
   [:div {:id "todos"}
@@ -18,31 +19,29 @@
      todos)
    ])
 
+
 (defn render-whole-page [todos]
   (page/html5
     [:body
      [:script {:src "https://unpkg.com/htmx.org@1.9.0" :crossorigin "anonymous"}]
-      (render-todos-fragment todos)
+     (render-todos-fragment todos)
      [:form {:hx-post "/todos" :hx-target "#todos"}
       [:input {:type "text" :name "todo-name"}]
       [:input {:type "submit"}]]
      ]
+    )
   )
-)
 
+(defroutes myapp
+           (GET "/" [] (render-whole-page (deref todos)))
+           (POST "/todos" req
+             (let [new-todo (get (:params req) :todo-name)]
+               (do
+                 (println new-todo)
+                 (swap! todos (fn [todos] (conj todos {:name new-todo :done false})))
+                 (html (render-todos-fragment (deref todos)))))))
 
-
-(defn -main
-  "I don't do a whole lot ... yet."
-  [& args]
-
-  (run-jetty
-    (fn [request]
-      (if (= (request :request-method) :post)
-        (do
-          (swap! todos
-                 (fn [todos] (conj todos {:name (request :body) :done false}))) ;Nicky, i don't know how to get form data, but this "works"
-          {:status 200 :body (html (render-todos-fragment (deref todos)))})
-
-        {:status 200 :body (render-whole-page (deref todos))}))
-    {:port 8080}))
+(defn -main []
+  (run-server
+    (wrap-defaults myapp (assoc site-defaults :security false))
+    {:port 5001}))
