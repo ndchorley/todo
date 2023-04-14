@@ -4,10 +4,10 @@
    [hiccup.page :as page])
   (:gen-class))
 
-(def todos [
-  {:name "Learn Clojure" :done false}
-  {:name "Buy beer" :done false}
-])
+(def todos (atom [
+                  {:name "Learn Clojure" :done false}
+                  {:name "Buy beer" :done false}
+                  ]))
 
 (defn render [todos]
   (page/html5
@@ -30,7 +30,10 @@
   (run-jetty
     (fn [request]
       (if (= (request :request-method) :post)
-        {:status 400 :body "Boo"}
-        
-        {:status 200 :body (render todos)}))
+        (do
+          (swap! todos
+                 (fn [todos] (conj todos {:name "lol" :done false})))
+          {:status 200 :body (render (deref todos))})
+
+        {:status 200 :body (render (deref todos))}))
     {:port 8080}))
