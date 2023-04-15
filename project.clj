@@ -5,8 +5,7 @@
             :url "https://www.eclipse.org/legal/epl-2.0/"}
   :dependencies [
     [org.clojure/clojure "1.11.1"]
-    [ring/ring-core "1.10.0"]
-    [ring/ring-jetty-adapter "1.9.5"]
+    [ring/ring "1.10.0"]
     [hiccup "1.0.5"]
     [compojure "1.7.0"]
     [http-kit "2.6.0"]
