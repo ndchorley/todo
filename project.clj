@@ -7,7 +7,6 @@
     [org.clojure/clojure "1.11.1"]
     [ring/ring-core "1.10.0"]
     [ring/ring-jetty-adapter "1.9.5"]
-    [ring/ring-mock "0.4.0"]
     [hiccup "1.0.5"]
     [compojure "1.1.8"]
     [http-kit "2.6.0"]
