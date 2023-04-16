@@ -14,8 +14,10 @@
 (def get-todos (fn [] @todos))
 (defn add-todo [description]
   (swap! todos add-new description))
+(defn toggle-todo [id]
+  (swap! todos toggle id))
 
 (defn -main []
   (run-server
-    (new-router get-todos add-todo)
+    (new-router get-todos add-todo toggle-todo)
     {:port 5001}))

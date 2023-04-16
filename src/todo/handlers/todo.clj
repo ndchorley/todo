@@ -9,9 +9,18 @@
                 (add-todo new-todo)
                 (render-todos-fragment (get-todos))))))
 
-(defn new-router [get-todos add-todo]
+(defn handle-toggle-todo [get-todos, toggle-todo]
+  (fn [req] (let [id (-> req :params :id)]
+              (do
+                (toggle-todo id)
+                (render-todos-fragment (get-todos))))))
+
+(defn new-router [get-todos add-todo toggle-todo]
   (wrap-defaults
     (defroutes router
                (GET "/" [] (render-whole-page (get-todos)))
-               (POST "/todos" _ (handle-new-todo get-todos add-todo)))
+               (GET "/static/styles.css" [] {:status 200 :headers {"Content-Type" "text/css"} :body css})
+               (POST "/todos" _ (handle-new-todo get-todos add-todo))
+               (POST "/todos/:id/toggle" _ (handle-toggle-todo get-todos toggle-todo)))
     (assoc site-defaults :security false)))
+

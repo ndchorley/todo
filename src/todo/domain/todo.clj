@@ -1,10 +1,16 @@
 (ns todo.domain.todo)
 
-(defn new-todo-list [] [{:name "Learn Clojure" :done false}
-                        {:name "Buy Gin" :done false}])
+(defn new-todo [name]
+  {:name name :done false :id (random-uuid)})
+(defn new-todo-list [] [(new-todo "Learn Clojure")
+                        (new-todo "Buy Gin")])
 
-(defn add-new [todos new-todo]
-  (conj todos {:name new-todo :done false}))
+(defn add-new [todos description]
+  (conj todos (new-todo description)))
 
-(defn mark-done [todos todo]
-  (map (fn [t] (if (= (:name t) todo) (assoc t :done true) t)) todos))
+(defn toggle [todos id]
+  (do (println (str "toggling " id))
+      (map (fn [t] (if (= (:id t) id) (assoc t :done (not (:done t))) t)) todos)))
+
+(defn remove-ids [todos]
+  (map #(dissoc % :id) todos))
