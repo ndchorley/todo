@@ -10,11 +10,12 @@
         add-todo (fn [desc] (swap! todos add-new desc))
         todo-router (new-router get-todos add-todo)]
     (testing "index page"
-      (is (= (:status (todo-router (mock/request :get "/"))) 200)))
+      (let [response (todo-router (mock/request :get "/"))]
+        (is (= 200 (:status response)))))
     (testing "add new todo"
-      (is (= 200 (:status (
-                            todo-router (->
-                                          (mock/request :post "/todos")
-                                          (mock/content-type "application/x-www-form-urlencoded")
-                                          (mock/body {:todo-name "new-todo"}))))))
-      (is (= true (do (println (get-todos)) (contains? (get-todos) {:name "new todo" :done false})))))))
+      (let [response (todo-router (->
+                                    (mock/request :post "/todos")
+                                    (mock/content-type "application/x-www-form-urlencoded")
+                                    (mock/body {:todo-name "new-todo"})))]
+        (is (= 200 (:status response)))
+        (is (contains? (get-todos) {:name "new todo" :done false}))))))
