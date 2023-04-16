@@ -1,10 +1,10 @@
 (ns todo.core
   (:require
-    [hiccup.page :as page]
     [hiccup.core :refer :all]
     [compojure.core :refer :all]
     [org.httpkit.server :refer [run-server]]
-    [ring.middleware.defaults :refer :all])
+    [ring.middleware.defaults :refer :all]
+    [todo.views.todo :refer :all])
   (:gen-class))
 
 (def todos (atom [
@@ -14,26 +14,6 @@
 
 (defn add-todo [new-todo]
   (swap! todos (fn [todos] (conj todos {:name new-todo :done false}))))
-
-(defn render-todos-fragment [todos]
-  [:div {:id "todos"}
-   (map
-     (fn [todo] [:h1 (todo :name)])
-     todos)
-   ])
-
-
-(defn render-whole-page [todos]
-  (page/html5
-    [:body
-     [:script {:src "https://unpkg.com/htmx.org@1.9.0" :crossorigin "anonymous"}]
-     (render-todos-fragment todos)
-     [:form {:hx-post "/todos" :hx-target "#todos"}
-      [:input {:type "text" :name "todo-name"}]
-      [:input {:type "submit"}]]
-     ]
-    )
-  )
 
 (defroutes myapp
            (GET "/" [] (render-whole-page (deref todos)))
