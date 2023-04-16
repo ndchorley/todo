@@ -5,8 +5,9 @@
 (defn render-index [todos] (render-whole-page todos))
 
 (defn handle-new-todo [get-todos, add-todo]
-  (fn [req] (let [new-todo (:todo-name (:params req))]
+  (fn [req] (let [new-todo (-> req :params :todo-name)]
               (do
+                (println (str "got new todo " (:params req)))
                 (add-todo new-todo)
                 (render-todos-fragment (get-todos))))))
 
