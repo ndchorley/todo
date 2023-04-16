@@ -13,11 +13,9 @@
 (defn add-todo [description]
   (swap! todos add-new description))
 
-(defroutes myapp
-           (GET "/" [] (render-index @todos))
-           (POST "/todos" _ (handle-new-todo get-todos add-todo)))
-
 (defn -main []
   (run-server
-    (wrap-defaults myapp (assoc site-defaults :security false))
+    (wrap-defaults
+      (new-router get-todos add-todo)
+      (assoc site-defaults :security false))
     {:port 5001}))
