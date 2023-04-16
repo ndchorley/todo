@@ -10,8 +10,8 @@
 
 (def todos (new-todo-list))
 (def get-todos (fn [] @todos))
- (defn add-todo [new-todo]
-  (swap! todos add-new new-todo))
+(defn add-todo [description]
+  (swap! todos add-new description))
 
 (defroutes myapp
            (GET "/" [] (render-index @todos))
