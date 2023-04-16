@@ -4,20 +4,15 @@
     [org.httpkit.server :refer [run-server]]
     [ring.middleware.defaults :refer :all]
     [todo.views.todo :refer :all]
-    [todo.handlers.todo :refer :all])
+    [todo.handlers.todo :refer :all]
+    [todo.domain.todo :refer :all])
   (:gen-class))
 
-(def todos (atom [
-                  {:name "Learn Clojure" :done false}
-                  {:name "Buy Gin" :done false}
-                  ]))
-
-(defn add-todo [new-todo]
-  (swap! todos (fn [todos] (conj todos {:name new-todo :done false}))))
+(def todos (new-todo-list))
 
 (defroutes myapp
-           (GET "/" [] (-> @todos render-index))
-           (POST "/todos" req (handle-new-todo req @todos add-todo)))
+           (GET "/" [] (render-index @todos))
+           (POST "/todos" _ (handle-new-todo todos add-todo)))
 
 (defn -main []
   (run-server

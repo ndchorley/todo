@@ -3,8 +3,9 @@
 
 (defn render-index [todos] (render-whole-page todos))
 
-(defn handle-new-todo [req, todos, add-todo]
-  (let [new-todo (:todo-name (:params req))]
-    (do
-      (add-todo new-todo)
-      (render-todos-fragment todos))))
+; todo / design question. It sucks that this thing has to "know" about todo being an atom
+(defn handle-new-todo [todos, add-todo]
+  (fn [req] (let [new-todo (:todo-name (:params req))]
+              (do
+                (add-todo todos new-todo)
+                (render-todos-fragment @todos)))))
