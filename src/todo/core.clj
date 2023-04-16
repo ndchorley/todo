@@ -7,7 +7,10 @@
     [todo.domain.todo :refer :all])
   (:gen-class))
 
-(def todos (new-todo-list))
+; todo: not sure how best to capture this atom-ness and servicey things outside of code for now
+; this is kinda bad, and you'll see is repeated in the handler test
+; but it's also nice to push impure stuff like this to the edges, need to have a think
+(def todos (atom (new-todo-list)))
 (def get-todos (fn [] @todos))
 (defn add-todo [description]
   (swap! todos add-new description))

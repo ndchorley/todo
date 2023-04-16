@@ -10,7 +10,7 @@
   (some #(= elm %) coll))
 
 (deftest todo-router
-  (let [todos (new-todo-list)
+  (let [todos (atom (new-todo-list))
         get-todos (fn [] @todos)
         add-todo (fn [desc] (swap! todos add-new desc))
         todo-router (new-router get-todos add-todo)]
