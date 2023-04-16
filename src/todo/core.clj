@@ -9,10 +9,13 @@
   (:gen-class))
 
 (def todos (new-todo-list))
+(def get-todos (fn [] @todos))
+ (defn add-todo [new-todo]
+  (swap! todos add-new new-todo))
 
 (defroutes myapp
            (GET "/" [] (render-index @todos))
-           (POST "/todos" _ (handle-new-todo todos add-todo)))
+           (POST "/todos" _ (handle-new-todo get-todos add-todo)))
 
 (defn -main []
   (run-server
