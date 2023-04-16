@@ -1,10 +1,10 @@
 (ns todo.core
   (:require
-    [hiccup.core :refer :all]
     [compojure.core :refer :all]
     [org.httpkit.server :refer [run-server]]
     [ring.middleware.defaults :refer :all]
-    [todo.views.todo :refer :all])
+    [todo.views.todo :refer :all]
+    [todo.handlers.todo :refer :all])
   (:gen-class))
 
 (def todos (atom [
@@ -16,12 +16,8 @@
   (swap! todos (fn [todos] (conj todos {:name new-todo :done false}))))
 
 (defroutes myapp
-           (GET "/" [] (render-whole-page (deref todos)))
-           (POST "/todos" req
-             (let [new-todo (:todo-name (:params req))]
-               (do
-                 (add-todo new-todo)
-                 (-> @todos render-todos-fragment html)))))
+           (GET "/" [] (-> @todos render-index))
+           (POST "/todos" req (handle-new-todo req @todos add-todo)))
 
 (defn -main []
   (run-server
