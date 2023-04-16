@@ -2,7 +2,6 @@
   (:require
     [compojure.core :refer :all]
     [org.httpkit.server :refer [run-server]]
-    [ring.middleware.defaults :refer :all]
     [todo.views.todo :refer :all]
     [todo.handlers.todo :refer :all]
     [todo.domain.todo :refer :all])
@@ -15,7 +14,5 @@
 
 (defn -main []
   (run-server
-    (wrap-defaults
-      (new-router get-todos add-todo)
-      (assoc site-defaults :security false))
+    (new-router get-todos add-todo)
     {:port 5001}))
