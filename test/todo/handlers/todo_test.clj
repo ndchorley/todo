@@ -17,9 +17,6 @@
     (testing "index page"
       (let [response (todo-router (mock/request :get "/"))]
         (is (= 200 (:status response)))))
-    ;(testing "some other page that should 404 to check my sanity (it returns nil because 404-ness is done by some other middleware)"
-    ;  (let [response (todo-router (-> mock/request :get "/some-other-page"))]
-    ;    (is (= 404 (:status response)))))
     (testing "add new todo"
       (let [response (todo-router (->
                                     (mock/request :post "/todos")
