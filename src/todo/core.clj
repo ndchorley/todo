@@ -41,7 +41,7 @@
              (let [new-todo (:todo-name (:params req))]
                (do
                  (add-todo new-todo)
-                 (html (render-todos-fragment (deref todos)))))))
+                 (-> @todos render-todos-fragment html)))))
 
 (defn -main []
   (run-server
