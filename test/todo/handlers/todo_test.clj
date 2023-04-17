@@ -13,7 +13,7 @@
   (let [todos (atom (todo/new-list))
         get-todos (fn [] @todos)
         add-todo (fn [desc] (swap! todos todo/add desc))
-        toggle-todo (fn [id] (do (println "SWAPPING") (swap! todos todo/toggle id)))
+        toggle-todo (fn [id] (swap! todos todo/toggle id))
         todo-router (new-router get-todos add-todo toggle-todo)]
     (testing "index page"
       (let [response (todo-router (mock/request :get "/"))]

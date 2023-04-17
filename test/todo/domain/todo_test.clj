@@ -7,7 +7,7 @@
     (is (= (todo/remove-ids (todo/new-list)) [{:name "Learn Clojure" :done false}
                             {:name "Buy Gin" :done false}])))
   (testing "add-new"
-    (is (= (todo/remove-ids (todo/add (todo/new-list) "new todo"))
+    (is (= (-> (todo/new-list) (todo/add "new todo") todo/remove-ids)
            [{:name "Learn Clojure" :done false}
             {:name "Buy Gin" :done false}
             {:name "new todo" :done false}])))

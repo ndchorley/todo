@@ -9,9 +9,7 @@
   (conj todos (new-todo description)))
 
 (defn toggle [todos id]
-  (do (println (str "toggling " id))
-      (println "uuid?" (uuid? id))
-      (map (fn [t] (if (= (:id t) id) (assoc t :done (not (:done t))) t)) todos)))
+  (map (fn [t] (if (= (:id t) id) (assoc t :done (not (:done t))) t)) todos))
 
 (defn remove-ids [todos]
   (map #(dissoc % :id) todos))
