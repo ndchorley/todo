@@ -1,6 +1,6 @@
 (ns todo.domain.todo)
 
-(defn new-todo [name]
+(defn- new-todo [name]
   {:name name :done false :id (str (random-uuid))})
 (defn new-todo-list [] [(new-todo "Learn Clojure")
                         (new-todo "Buy Gin")])
