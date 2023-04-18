@@ -5,10 +5,12 @@
 (defn- render-todo [todo]
   (do
       [:li
-       {:hx-swap   "outerHTML"
-        :hx-post   (str "/todos/" (todo :id) "/toggle")
-        :class     (when (todo :done) "done")}
-       (todo :name)
+       [:form
+        {:hx-swap  "outerHTML"
+         :hx-target "closest li"
+         :class    (when (todo :done) "done")}
+        [:input {:type "hidden" :name "done" :value (str (not (todo :done)))}]
+        [:p {:hx-patch (str "/todos/" (todo :id))} (todo :name)]]
        ]))
 
 (defn todo-fragment [todo] (-> todo render-todo html))
