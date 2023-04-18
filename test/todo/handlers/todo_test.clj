@@ -13,7 +13,7 @@
   (let [todos (atom (todo/new-list))
         get-todos (fn [] @todos)
         add-todo (fn [desc] (swap! todos todo/add desc))
-        toggle-todo (fn [id] (swap! todos todo/toggle id))
+        toggle-todo (fn [id new-status] (swap! todos todo/new-status id new-status))
         todo-router (new-router get-todos add-todo toggle-todo)]
     (testing "index page"
       (let [response (todo-router (mock/request :get "/"))]
@@ -28,8 +28,10 @@
     (testing "toggle todo"
       (let [first-item (-> (get-todos) first :id)
             response (todo-router (->
-                                    (mock/request :post (str "/todos/" first-item "/toggle"))))]
+                                    (mock/request :patch (str "/todos/" first-item))
+                                    (mock/content-type "application/x-www-form-urlencoded")
+                                    (mock/body "done=true")))]
         (println (get-todos))
         (is (= 200 (:status response)))
-        (is (in? (-> (get-todos) todo/remove-ids) {:name "Learn Clojure" :done true})))) ))
+        (is (in? (-> (get-todos) todo/remove-ids) {:name "Learn Clojure" :done true}))))))
 

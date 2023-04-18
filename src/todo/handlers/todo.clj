@@ -14,7 +14,7 @@
   (fn [req] (let [new-status (-> req :params :done parse-boolean)
                      id (-> req :params :id)]
               (do
-                (println ">>>" new-status)
+                (println ">>>" id new-status)
                 (todo-status id new-status)
                 (view/todo-fragment (todo/find-by-id (get-todos) id))))))
 
