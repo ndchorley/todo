@@ -14,7 +14,8 @@
         get-todos (fn [] @todos)
         add-todo (fn [desc] (swap! todos todo/add desc))
         toggle-todo (fn [id new-status] (swap! todos todo/new-status id new-status))
-        todo-router (new-router get-todos add-todo toggle-todo)]
+        delete-todo (fn [id] (swap! todos todo/delete id))
+        todo-router (new-router get-todos add-todo toggle-todo delete-todo)]
     (testing "index page"
       (let [response (todo-router (mock/request :get "/"))]
         (is (= 200 (:status response)))))
@@ -31,7 +32,12 @@
                                     (mock/request :patch (str "/todos/" first-item))
                                     (mock/content-type "application/x-www-form-urlencoded")
                                     (mock/body "done=true")))]
-        (println (get-todos))
         (is (= 200 (:status response)))
-        (is (in? (-> (get-todos) todo/remove-ids) {:name "Learn Clojure" :done true}))))))
+        (is (in? (-> (get-todos) todo/remove-ids) {:name "Learn Clojure" :done true}))))
+    (testing "delete todo"
+      (let [first-item (-> (get-todos) first :id)
+            response (todo-router (->
+                                    (mock/request :delete (str "/todos/" first-item))))]
+        (is (= 200 (:status response)))
+        (is (not (in? (-> (get-todos) todo/remove-ids) {:name "Learn Clojure" :done true})))))))
 

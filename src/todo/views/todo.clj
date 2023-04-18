@@ -11,7 +11,7 @@
          :class    (when (todo :done) "done")}
         [:input {:type "hidden" :name "done" :value (str (not (todo :done)))}]
         [:p {:hx-patch (str "/todos/" (todo :id))} (todo :name)]]
-        [:button {:hx-swap "outerHTML" :hx-delete (str "/todos/" (todo :id))} "❌"]
+        [:button {:hx-target "closest li" :hx-swap "outerHTML" :hx-delete (str "/todos/" (todo :id))} "❌"]
        ]))
 
 (defn todo-fragment [todo] (-> todo render-todo html))

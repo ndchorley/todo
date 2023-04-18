@@ -14,22 +14,22 @@
   (fn [req] (let [new-status (-> req :params :done parse-boolean)
                      id (-> req :params :id)]
               (do
-                (println ">>>" id new-status)
                 (todo-status id new-status)
                 (view/todo-fragment (todo/find-by-id (get-todos) id))))))
 
-(defn handle-toggle-todo [get-todos, toggle-todo]
+(defn handle-delete-todo [delete-todo]
   (fn [req] (let [id (-> req :params :id)]
               (do
-                (toggle-todo id)
-                (view/todo-fragment (todo/find-by-id (get-todos) id))))))
+                (delete-todo id)
+                (str "")))))
 
-(defn new-router [get-todos add-todo todo-status]
+(defn new-router [get-todos add-todo todo-status delete-todo]
   (wrap-defaults
     (defroutes router
                (GET "/" [] (view/index (get-todos)))
                (GET "/static/styles.css" [] {:status 200 :headers {"Content-Type" "text/css"} :body view/css})
                (POST "/todos" _ (handle-new-todo get-todos add-todo))
-               (PATCH "/todos/:id" _ (handle-patch-todo get-todos todo-status)))
+               (PATCH "/todos/:id" _ (handle-patch-todo get-todos todo-status))
+               (DELETE "/todos/:id" _ (handle-delete-todo delete-todo)))
     (assoc site-defaults :security false)))
 
