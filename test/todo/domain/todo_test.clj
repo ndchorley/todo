@@ -15,4 +15,8 @@
     (let [todos (todo/new-list)]
       (is (= (todo/remove-ids (todo/toggle todos (:id (first todos))))
              [{:name "Learn Clojure" :done true}
-              {:name "Buy Gin" :done false}])))))
+              {:name "Buy Gin" :done false}]))))
+  (testing "find-by-id"
+    (let [todos (todo/new-list)]
+      (is (= (todo/find-by-id todos (:id (first todos)))
+             {:name "Learn Clojure" :done false :id (:id (first todos))})))))
