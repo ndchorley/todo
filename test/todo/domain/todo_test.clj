@@ -5,7 +5,7 @@
 (deftest manage-a-todo-list
   (testing "new-todo-list"
     (is (= (todo/remove-ids (todo/new-list)) [{:name "Learn Clojure" :done false}
-                            {:name "Buy Gin" :done false}])))
+                                              {:name "Buy Gin" :done false}])))
   (testing "add-new"
     (is (= (-> (todo/new-list) (todo/add "new todo") todo/remove-ids)
            [{:name "Learn Clojure" :done false}
@@ -19,4 +19,8 @@
   (testing "find-by-id"
     (let [todos (todo/new-list)]
       (is (= (todo/find-by-id todos (:id (first todos)))
-             {:name "Learn Clojure" :done false :id (:id (first todos))})))))
+             {:name "Learn Clojure" :done false :id (:id (first todos))}))))
+  (testing "delete-by-id")
+    (let [todos (todo/new-list)]
+      (is (= (todo/delete todos (:id (first todos)))
+             [{:name "Buy Gin" :done false :id (:id (second todos))}]))))

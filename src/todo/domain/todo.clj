@@ -19,3 +19,6 @@
 
 (defn find-by-id [todos id]
   (first (filter #(= (:id %) id) todos)))
+
+(defn delete [todos id]
+  (remove #(= (:id %) id) todos))
