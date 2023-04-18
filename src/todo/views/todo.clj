@@ -6,7 +6,6 @@
   (do
       [:li
        {:hx-swap   "outerHTML"
-        :hx-target "closest div"
         :hx-post   (str "/todos/" (todo :id) "/toggle")
         :class     (when (todo :done) "done")}
        (todo :name)

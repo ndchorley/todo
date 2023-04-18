@@ -13,7 +13,7 @@
   (fn [req] (let [id (-> req :params :id)]
               (do
                 (toggle-todo id)
-                (render-todos-fragment (get-todos))))))
+                (render-todo-fragment (first (filter #(= id (:id %)) (get-todos))))))))
 
 (defn new-router [get-todos add-todo toggle-todo]
   (wrap-defaults
