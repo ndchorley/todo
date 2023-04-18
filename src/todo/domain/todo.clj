@@ -13,3 +13,6 @@
 
 (defn remove-ids [todos]
   (map #(dissoc % :id) todos))
+
+(defn find-by-id [todos id]
+  (first (filter #(= (:id %) id) todos)))

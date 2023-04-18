@@ -1,5 +1,6 @@
 (ns todo.handlers.todo
   [:require [todo.views.todo :refer :all]
+            [todo.domain.todo :as todo]
             [compojure.core :refer :all]
             [ring.middleware.defaults :refer :all]])
 
@@ -13,7 +14,7 @@
   (fn [req] (let [id (-> req :params :id)]
               (do
                 (toggle-todo id)
-                (render-todo-fragment (first (filter #(= id (:id %)) (get-todos))))))))
+                (render-todo-fragment (todo/find-by-id (get-todos) id))))))
 
 (defn new-router [get-todos add-todo toggle-todo]
   (wrap-defaults
