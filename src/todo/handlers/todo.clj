@@ -10,15 +10,18 @@
                 (add-todo new-todo)
                 (view/todos-fragment (get-todos))))))
 
+(defn- id-from-request [req]
+  (-> req :params :id))
+
 (defn handle-patch-todo [get-todos, todo-status]
   (fn [req] (let [new-status (-> req :params :done parse-boolean)
-                     id (-> req :params :id)]
+                     id (id-from-request req)]
               (do
                 (todo-status id new-status)
                 (view/todo-fragment (todo/find-by-id (get-todos) id))))))
 
 (defn handle-delete-todo [delete-todo]
-  (fn [req] (let [id (-> req :params :id)]
+  (fn [req] (let [id (id-from-request req)]
               (do
                 (delete-todo id)
                 (str "")))))
