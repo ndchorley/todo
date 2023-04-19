@@ -13,9 +13,9 @@
   (let [todos (atom (todo/new-list))
         get-todos (fn [] @todos)
         add-todo (fn [desc] (swap! todos todo/add desc))
-        toggle-todo (fn [id new-status] (swap! todos todo/new-status id new-status))
+        edit-todo (fn [id new-status new-name] (swap! todos todo/edit id new-status new-name))
         delete-todo (fn [id] (swap! todos todo/delete id))
-        todo-router (new-router get-todos add-todo toggle-todo delete-todo)]
+        todo-router (new-router get-todos add-todo edit-todo delete-todo)]
     (testing "index page"
       (let [response (todo-router (mock/request :get "/"))]
         (is (= 200 (:status response)))))
@@ -26,14 +26,14 @@
                                     (mock/body "todo-name=new todo")))]
         (is (= 200 (:status response)))
         (is (in? (-> (get-todos) todo/remove-ids) {:name "new todo" :done false}))))
-    (testing "toggle todo"
+    (testing "edit todo"
       (let [first-item (-> (get-todos) first :id)
             response (todo-router (->
                                     (mock/request :patch (str "/todos/" first-item))
                                     (mock/content-type "application/x-www-form-urlencoded")
-                                    (mock/body "done=true")))]
+                                    (mock/body "done=true&name=Learn Scheme")))]
         (is (= 200 (:status response)))
-        (is (in? (-> (get-todos) todo/remove-ids) {:name "Learn Clojure" :done true}))))
+        (is (in? (-> (get-todos) todo/remove-ids) {:name "Learn Scheme" :done true}))))
     (testing "delete todo"
       (let [first-item (-> (get-todos) first :id)
             response (todo-router (->

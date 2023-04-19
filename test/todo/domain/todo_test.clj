@@ -11,10 +11,10 @@
            [{:name "Learn Clojure" :done false}
             {:name "Buy Gin" :done false}
             {:name "new todo" :done false}])))
-  (testing "toggle"
+  (testing "edit"
     (let [todos (todo/new-list)]
-      (is (= (todo/remove-ids (todo/toggle todos (:id (first todos))))
-             [{:name "Learn Clojure" :done true}
+      (is (= (todo/remove-ids (todo/edit todos (:id (first todos)) true "Learn Scheme"))
+             [{:name "Learn Scheme" :done true}
               {:name "Buy Gin" :done false}]))))
   (testing "find-by-id"
     (let [todos (todo/new-list)]

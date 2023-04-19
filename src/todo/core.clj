@@ -11,8 +11,8 @@
   (let [todos (atom (todo/new-list))
         get-todos (fn [] @todos)
         add-todo (fn [desc] (swap! todos todo/add desc))
-        todo-status (fn [id new-status] (swap! todos todo/new-status id new-status))
+        edit-todo (fn [id new-status new-name] (swap! todos todo/edit id new-status new-name))
         delete-todo (fn [id] (swap! todos todo/delete id))]
     (run-server
-      (new-router get-todos add-todo todo-status delete-todo)
+      (new-router get-todos add-todo edit-todo delete-todo)
       {:port 5001})))

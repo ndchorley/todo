@@ -11,8 +11,8 @@
 (defn toggle [todos id]
   (map (fn [t] (if (= (:id t) id) (assoc t :done (not (:done t))) t)) todos))
 
-(defn new-status [todos id new-status]
-  (map (fn [t] (if (= (:id t) id) (assoc t :done new-status) t)) todos))
+(defn edit [todos id new-status new-name]
+  (map (fn [t] (if (= (:id t) id) (assoc t :done new-status :name new-name) t)) todos))
 
 (defn remove-ids [todos]
   (map #(dissoc % :id) todos))

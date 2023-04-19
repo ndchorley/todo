@@ -10,10 +10,22 @@
        :hx-target "closest li"
        :class     (when (todo :done) "done")}
       [:input {:type "hidden" :name "done" :value (str (not (todo :done)))}]
+      [:input {:type "hidden" :name "name" :value (todo :name)}]
       [:button {:hx-target "closest li" :hx-swap "outerHTML" :hx-delete (str "/todos/" (todo :id))} "❌"]
       [:button {:hx-target "closest li" :hx-swap "outerHTML" :hx-get (str "/todos/" (todo :id))} "\uD83D\uDCDD"]
       [:span {:hx-patch (str "/todos/" (todo :id))} (todo :name)]]
      ]))
+
+(defn todo-form [todo]
+  (html
+    [:li
+     [:button {:disabled true} "❌"]
+     [:button {:disabled true} "📝"]
+     [:form {:hx-patch (str "/todos/" (todo :id)), :hx-target "closest li", :hx-swap "outerHTML"}
+      [:input {:type "hidden" :name "done" :value (str (todo :done))}]
+      [:input {:type "text", :name "name"}]
+      [:input {:type "submit"}]]
+     [:span {:class (when (todo :done) "done")} (todo :name)]]))
 
 (defn todo-fragment [todo] (-> todo render-todo html))
 

@@ -13,11 +13,12 @@
 (defn- id-from-request [req]
   (-> req :params :id))
 
-(defn handle-patch-todo [get-todos, todo-status]
+(defn handle-patch-todo [get-todos, todo-edit]
   (fn [req] (let [new-status (-> req :params :done parse-boolean)
-                     id (id-from-request req)]
+                  new-name (-> req :params :name)
+                  id (id-from-request req)]
               (do
-                (todo-status id new-status)
+                (todo-edit id new-status new-name)
                 (view/todo-fragment (todo/find-by-id (get-todos) id))))))
 
 (defn handle-delete-todo [delete-todo]
@@ -26,13 +27,20 @@
                 (delete-todo id)
                 (str "")))))
 
-(defn new-router [get-todos add-todo todo-status delete-todo]
+(defn handle-get-todo [get-todos]
+  (fn [req] (let [id (id-from-request req)]
+              (do
+                (println "id" id)
+                (view/todo-form (todo/find-by-id (get-todos) id))))))
+
+(defn new-router [get-todos add-todo todo-edit delete-todo]
   (wrap-defaults
     (defroutes router
                (GET "/" [] (view/index (get-todos)))
                (GET "/static/styles.css" [] {:status 200 :headers {"Content-Type" "text/css"} :body view/css})
                (POST "/todos" _ (handle-new-todo get-todos add-todo))
-               (PATCH "/todos/:id" _ (handle-patch-todo get-todos todo-status))
+               (PATCH "/todos/:id" _ (handle-patch-todo get-todos todo-edit))
+               (GET "/todos/:id" _ (handle-get-todo get-todos))
                (DELETE "/todos/:id" _ (handle-delete-todo delete-todo)))
     (assoc site-defaults :security false)))
 
