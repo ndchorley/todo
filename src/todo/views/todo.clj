@@ -23,9 +23,9 @@
      [:button {:disabled true} "📝"]
      [:form {:hx-patch (str "/todos/" (todo :id)), :hx-target "closest li", :hx-swap "outerHTML"}
       [:input {:type "hidden" :name "done" :value (str (todo :done))}]
-      [:input {:type "text", :name "name"}]
+      [:input {:type "text", :name "name" :value (todo :name)} ]
       [:input {:type "submit"}]]
-     [:span {:class (when (todo :done) "done")} (todo :name)]]))
+     ]))
 
 (defn todo-fragment [todo] (-> todo render-todo html))
 
