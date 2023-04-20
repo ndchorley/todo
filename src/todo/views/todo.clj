@@ -35,6 +35,11 @@
 
 (defn todos-fragment [todos] (-> todos render-todos html))
 
+(defn- render-search []
+  [:label "Search "
+   [:input
+    {:type "text", :name "search", :placeholder "Begin Typing To Search", :hx-get "/todos", :hx-trigger "keyup changed delay:500ms, search", :hx-target "#todos", :hx-replace "innerHTML"}]])
+
 (defn index [todos]
   (page/html5
     [:body
@@ -42,6 +47,7 @@
      [:link {:rel "stylesheet" :href "/static/styles.css"}]
      [:section
       [:h1 "TODO"]
+      (render-search)
       (render-todos todos)
       [:form {:hx-post "/todos" :hx-target "#todos"}
        [:input {:type "text" :name "todo-name"}]

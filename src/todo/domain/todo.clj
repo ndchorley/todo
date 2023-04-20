@@ -1,4 +1,5 @@
-(ns todo.domain.todo)
+(ns todo.domain.todo
+  [:require [clojure.string :as str]])
 
 (defn- new-todo [name]
   {:name name :done false :id (str (random-uuid))})
@@ -19,6 +20,12 @@
 
 (defn find-by-id [todos id]
   (first (filter #(= (:id %) id) todos)))
+
+(defn search [todos search-term]
+  (filter #(let [name-lower (clojure.string/lower-case (:name %))
+                 search-lower (clojure.string/lower-case search-term)]
+             (.contains name-lower search-lower))
+          todos))
 
 (defn delete [todos id]
   (remove #(= (:id %) id) todos))

@@ -20,7 +20,11 @@
     (let [todos (todo/new-list)]
       (is (= (todo/find-by-id todos (:id (first todos)))
              {:name "Learn Clojure" :done false :id (:id (first todos))}))))
-  (testing "delete-by-id")
+  (testing "delete-by-id"
     (let [todos (todo/new-list)]
       (is (= (todo/delete todos (:id (first todos)))
              [{:name "Buy Gin" :done false :id (:id (second todos))}]))))
+  (testing "search"
+    (let [todos (todo/new-list)]
+      (is (= (todo/remove-ids (todo/search todos "gin"))
+             [{:name "Buy Gin" :done false}])))))

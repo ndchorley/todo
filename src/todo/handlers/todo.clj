@@ -21,6 +21,10 @@
                 (edit-todo id new-status new-name)
                 (view/todo-fragment (todo/find-by-id (get-todos) id))))))
 
+(defn handle-get-todos [get-todos]
+  (fn [req] (let [search (-> req :params :search)]
+              (view/todos-fragment (todo/search (get-todos) search)))))
+
 (defn handle-delete-todo [delete-todo]
   (fn [req] (let [id (id-from-request req)]
               (do
@@ -38,6 +42,7 @@
     (defroutes router
                (GET "/" [] (view/index (get-todos)))
                (GET "/static/styles.css" [] {:status 200 :headers {"Content-Type" "text/css"} :body view/css})
+               (GET "/todos" _ (handle-get-todos get-todos))
                (POST "/todos" _ (handle-new-todo get-todos add-todo))
                (PATCH "/todos/:id" _ (handle-patch-todo get-todos edit-todo))
                (GET "/todos/:id" _ (handle-get-todo get-todos))
