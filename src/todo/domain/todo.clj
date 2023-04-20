@@ -6,11 +6,10 @@
 (defn new-list [] [(new-todo "Learn Clojure")
                         (new-todo "Buy Gin")])
 
+(defrecord Todo [name done id])
+
 (defn add [todos description]
   (conj todos (new-todo description)))
-
-(defn toggle [todos id]
-  (map (fn [t] (if (= (:id t) id) (assoc t :done (not (:done t))) t)) todos))
 
 (defn edit [todos id new-status new-name]
   (map (fn [t] (if (= (:id t) id) (assoc t :done new-status :name new-name) t)) todos))

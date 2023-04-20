@@ -22,8 +22,13 @@
                 (view/todo-fragment (todo/find-by-id (get-todos) id))))))
 
 (defn handle-get-todos [get-todos]
-  (fn [req] (let [search (-> req :params :search)]
-              (view/todos-fragment (todo/search (get-todos) search)))))
+  (fn [req] (let [search (-> req :params (get :search ""))
+                  is-htmx (get-in req [:headers "hx-request"])
+                  todos (todo/search (get-todos) search)]
+              (do
+                (if (some? is-htmx)
+                  (view/todos-fragment todos)
+                  (view/index todos))))))
 
 (defn handle-delete-todo [delete-todo]
   (fn [req] (let [id (id-from-request req)]
