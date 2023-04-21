@@ -107,6 +107,10 @@ button:focus {
     outline: red 5px auto;
 }
 
+form {
+    display: inline;
+}
+
 .done {
     text-decoration: line-through;
 }")
