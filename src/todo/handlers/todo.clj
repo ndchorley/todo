@@ -16,19 +16,19 @@
 (defn handle-patch-todo [get-todos, edit-todo]
   (fn [req] (let [new-status (-> req :params :done parse-boolean)
                   new-name (-> req :params :name)
-                  id (id-from-request req)]
+                  id (id-from-request req)
+                  todos (todo/find-by-id (get-todos) id)]
               (do
                 (edit-todo id new-status new-name)
-                (view/todo-fragment (todo/find-by-id (get-todos) id))))))
+                (view/todo-fragment todos)))))
 
 (defn handle-get-todos [get-todos]
   (fn [req] (let [search (-> req :params (get :search ""))
                   is-htmx (get-in req [:headers "hx-request"])
                   todos (todo/search (get-todos) search)]
-              (do
-                (if (some? is-htmx)
-                  (view/todos-fragment todos)
-                  (view/index todos))))))
+              (if is-htmx
+                (view/todos-fragment todos)
+                (view/index todos)))))
 
 (defn handle-delete-todo [delete-todo]
   (fn [req] (let [id (id-from-request req)]
@@ -37,10 +37,11 @@
                 (str "")))))
 
 (defn handle-get-todo [get-todos]
-  (fn [req] (let [id (id-from-request req)]
+  (fn [req] (let [id (id-from-request req)
+                  todo (todo/find-by-id (get-todos) id)]
               (do
                 (println "id" id)
-                (view/todo-form (todo/find-by-id (get-todos) id))))))
+                (view/todo-form todo)))))
 
 (defn new-router [get-todos add-todo edit-todo delete-todo]
   (wrap-defaults
