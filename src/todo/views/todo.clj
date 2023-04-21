@@ -46,7 +46,9 @@
     [:input
      {:type "text", :name "search", :placeholder "Begin Typing To Search", :hx-get "/todos", :hx-trigger "keyup changed delay:500ms, search", :hx-target "#todos", :hx-replace "innerHTML"}]]])
 
-(defn index [todos]
+
+;; refactor below to extract out everything up to h1
+(defn furniture [children]
   (page/html5
     [:body
      [:script {:src "https://unpkg.com/htmx.org@1.9.0" :crossorigin "anonymous"}]
@@ -54,13 +56,14 @@
      [:link {:rel "stylesheet" :href "/static/styles.css"}]
      [:section
       [:h1 "TODO"]
-      (render-search)
-      (render-todos todos)
-      [:form {:hx-post "/todos" :hx-target "#todos" :method "post" :action "/todos"}
-       [:label "Add Todo "
-        [:input {:type "text" :name "todo-name"}]]]]
-     ]
-    )
+      (html children)]]))
+
+(defn index [todos]
+  (furniture (html (render-search)
+                   (render-todos todos)
+                   [:form {:hx-post "/todos" :hx-target "#todos" :method "post" :action "/todos"}
+                    [:label "Add Todo "
+                     [:input {:type "text" :name "todo-name"}]]]))
   )
 
 (def css "

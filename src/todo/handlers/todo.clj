@@ -44,8 +44,11 @@
 
 (defn handle-get-todo [get-todos]
   (fn [req] (let [id (id-from-request req)
-                  todo (todo/find-by-id (get-todos) id)]
-              (view/todo-form todo))))
+                  todo (todo/find-by-id (get-todos) id)
+                  is-htmx (get-in req [:headers "hx-request"])]
+              (if is-htmx
+                (view/todo-form todo)
+                (view/furniture (view/todo-form todo))))))
 
 (defn new-router [get-todos add-todo edit-todo delete-todo]
   (wrap-defaults
