@@ -96,6 +96,10 @@ label input {
     margin-left: 1em;
 }
 
+label {
+   display: flex;
+}
+
 button {
     all: unset;
     cursor: pointer;
