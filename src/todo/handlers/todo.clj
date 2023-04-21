@@ -1,14 +1,18 @@
 (ns todo.handlers.todo
+  (:use ring.util.response)
   [:require [todo.views.todo :as view]
             [todo.domain.todo :as todo]
             [compojure.core :refer :all]
             [ring.middleware.defaults :refer :all]])
 
 (defn handle-new-todo [get-todos, add-todo]
-  (fn [req] (let [new-todo (-> req :params :todo-name)]
+  (fn [req] (let [new-todo (-> req :params :todo-name)
+                  is-htmx (get-in req [:headers "hx-request"])]
               (do
                 (add-todo new-todo)
-                (view/todos-fragment (get-todos))))))
+                (if is-htmx
+                  (view/todos-fragment (get-todos))
+                  (redirect "/"))))))
 
 (defn- id-from-request [req]
   (-> req :params :id))

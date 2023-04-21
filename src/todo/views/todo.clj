@@ -50,7 +50,7 @@
       [:h1 "TODO"]
       (render-search)
       (render-todos todos)
-      [:form {:hx-post "/todos" :hx-target "#todos"}
+      [:form {:hx-post "/todos" :hx-target "#todos" :method "post" :action "/todos"}
        [:input {:type "text" :name "todo-name"}]
        [:input {:type "submit"}]]]
      ]
