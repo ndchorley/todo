@@ -21,10 +21,13 @@
   (fn [req] (let [new-status (-> req :params :done parse-boolean)
                   new-name (-> req :params :name)
                   id (id-from-request req)
+                  is-htmx (get-in req [:headers "hx-request"])
                   todos (todo/find-by-id (get-todos) id)]
               (do
                 (edit-todo id new-status new-name)
-                (view/todo-fragment todos)))))
+                (if is-htmx
+                  (view/todo-fragment todos)
+                  (redirect "/"))))))
 
 (defn handle-get-todos [get-todos]
   (fn [req] (let [search (-> req :params (get :search ""))
@@ -60,6 +63,7 @@
                (PATCH "/todos/:id" _ (handle-patch-todo get-todos edit-todo))
                (GET "/todos/:id" _ (handle-get-todo get-todos))
                (POST "/todos/:id/delete" _ (handle-delete-todo delete-todo))
+               (POST "/todos/:id/edit" _ (handle-patch-todo get-todos edit-todo))
                (DELETE "/todos/:id" _ (handle-delete-todo delete-todo)))
     (assoc site-defaults :security false)))
 

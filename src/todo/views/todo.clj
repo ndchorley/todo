@@ -7,7 +7,7 @@
     [:li
      [:form {:method "POST" :action (str "/todos/" (todo :id) "/delete")}
       [:button {:hx-target "closest li" :hx-swap "outerHTML" :hx-delete (str "/todos/" (todo :id))} "❌"]]
-     [:form {:method "GET" :action (str "/todos/" (todo :id) "/edit")}
+     [:form {:method "GET" :action (str "/todos/" (todo :id))}
       [:button {:hx-target "closest li" :hx-swap "outerHTML" :hx-get (str "/todos/" (todo :id))} "\uD83D\uDCDD"]]
      [:form
       {:hx-swap   "outerHTML"
@@ -23,7 +23,7 @@
     [:li
      [:button {:disabled true} "❌"]
      [:button {:disabled true} "📝"]
-     [:form {:hx-patch (str "/todos/" (todo :id)), :hx-target "closest li", :hx-swap "outerHTML"}
+     [:form {:hx-patch (str "/todos/" (todo :id)), :hx-target "closest li", :hx-swap "outerHTML" :method "POST" :action (str "/todos/" (todo :id) "/edit")}
       [:input {:type "hidden" :name "done" :value (str (todo :done))}]
       [:input {:type "text", :name "name" :value (todo :name)} ]
       [:input {:type "submit"}]]
