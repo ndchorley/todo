@@ -17,9 +17,8 @@
        :class     (when (todo :done) "done")}
       [:input {:type "hidden" :name "done" :value (str (not (todo :done)))}]
       [:input {:type "hidden" :name "name" :value (todo :name)}]
-      [:input {:type "checkbox" :id (str (todo :id)) :checked (todo :done) :hx-patch (str "/todos/" (todo :id))}]
-      [:label {:for (str (todo :id))} (todo :name)]
-      [:noscript [:input {:type "submit" :value "Update"}]]]
+      [:noscript [:input {:type "submit" :value (if (todo :done) "Set as Not Done" "Set as Done")}]]
+      [:span {:for (str (todo :id)) :hx-patch (str "/todos/" (todo :id))} (todo :name)]]
      ]))
 
 (defn todo-form [todo]
@@ -101,7 +100,7 @@ label input {
 }
 
 input[type=submit] {
-  width: auto;
+  margin-right: 1em;
 }
 
 li label {
