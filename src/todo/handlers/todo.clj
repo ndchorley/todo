@@ -8,11 +8,10 @@
 (defn handle-new-todo [get-todos, add-todo]
   (fn [req] (let [new-todo (-> req :params :todo-name)
                   is-htmx (get-in req [:headers "hx-request"])]
-              (do
-                (add-todo new-todo)
-                (if is-htmx
-                  (view/todos-fragment (get-todos))
-                  (redirect "/"))))))
+              (add-todo new-todo)
+              (if is-htmx
+                (view/todos-fragment (get-todos))
+                (redirect "/")))))
 
 (defn- id-from-request [req]
   (-> req :params :id))
@@ -22,11 +21,10 @@
                   new-name (-> req :params :name)
                   id (id-from-request req)
                   is-htmx (get-in req [:headers "hx-request"])]
-              (do
-                (edit-todo id new-status new-name)
-                (if is-htmx
-                  (view/todo-fragment (todo/find-by-id (get-todos) id))
-                  (redirect "/"))))))
+              (edit-todo id new-status new-name)
+              (if is-htmx
+                (view/todo-fragment (todo/find-by-id (get-todos) id))
+                (redirect "/")))))
 
 (defn handle-get-todos [get-todos]
   (fn [req] (let [search (-> req :params (get :search ""))
@@ -39,18 +37,15 @@
 (defn handle-delete-todo [delete-todo]
   (fn [req] (let [id (id-from-request req)
                   is-htmx (get-in req [:headers "hx-request"])]
-              (do
-                (delete-todo id)
-                (if is-htmx
-                  (str "")
-                  (redirect "/"))))))
+              (delete-todo id)
+              (if is-htmx
+                (str "")
+                (redirect "/")))))
 
 (defn handle-get-todo [get-todos]
   (fn [req] (let [id (id-from-request req)
                   todo (todo/find-by-id (get-todos) id)]
-              (do
-                (println "id" id)
-                (view/todo-form todo)))))
+              (view/todo-form todo))))
 
 (defn new-router [get-todos add-todo edit-todo delete-todo]
   (wrap-defaults
