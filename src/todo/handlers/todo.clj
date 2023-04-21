@@ -5,22 +5,27 @@
             [compojure.core :refer :all]
             [ring.middleware.defaults :refer :all]])
 
+(defn- id-from-request [req]
+  (-> req :params :id))
+
+(defn- is-htmx? [req]
+  (get-in req [:headers "hx-request"]))
+
 (defn handle-new-todo [get-todos, add-todo]
   (fn [req] (let [new-todo (-> req :params :todo-name)
-                  is-htmx (get-in req [:headers "hx-request"])]
+                  is-htmx (is-htmx? req)]
               (add-todo new-todo)
               (if is-htmx
                 (view/todos-fragment (get-todos))
                 (redirect "/")))))
 
-(defn- id-from-request [req]
-  (-> req :params :id))
+
 
 (defn handle-patch-todo [get-todos, edit-todo]
   (fn [req] (let [new-status (-> req :params :done parse-boolean)
                   new-name (-> req :params :name)
                   id (id-from-request req)
-                  is-htmx (get-in req [:headers "hx-request"])]
+                  is-htmx (is-htmx? req)]
               (edit-todo id new-status new-name)
               (if is-htmx
                 (view/todo-fragment (todo/find-by-id (get-todos) id))
@@ -28,7 +33,7 @@
 
 (defn handle-get-todos [get-todos]
   (fn [req] (let [search (-> req :params (get :search ""))
-                  is-htmx (get-in req [:headers "hx-request"])
+                  is-htmx (is-htmx? req)
                   todos (todo/search (get-todos) search)]
               (if is-htmx
                 (view/todos-fragment todos)
@@ -36,7 +41,7 @@
 
 (defn handle-delete-todo [delete-todo]
   (fn [req] (let [id (id-from-request req)
-                  is-htmx (get-in req [:headers "hx-request"])]
+                  is-htmx (is-htmx? req)]
               (delete-todo id)
               (if is-htmx
                 (str "")
@@ -45,7 +50,7 @@
 (defn handle-get-todo [get-todos]
   (fn [req] (let [id (id-from-request req)
                   todo (todo/find-by-id (get-todos) id)
-                  is-htmx (get-in req [:headers "hx-request"])]
+                  is-htmx (is-htmx? req)]
               (if is-htmx
                 (view/todo-form todo)
                 (view/furniture (view/todo-form todo))))))
