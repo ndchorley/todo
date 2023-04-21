@@ -12,10 +12,14 @@
      [:form
       {:hx-swap   "outerHTML"
        :hx-target "closest li"
+       :method    "POST"
+       :action    (str "/todos/" (todo :id) "/edit")
        :class     (when (todo :done) "done")}
       [:input {:type "hidden" :name "done" :value (str (not (todo :done)))}]
       [:input {:type "hidden" :name "name" :value (todo :name)}]
-      [:span {:hx-patch (str "/todos/" (todo :id))} (todo :name)]]
+      [:input {:type "checkbox" :id (str (todo :id)) :checked (todo :done) :hx-patch (str "/todos/" (todo :id))}]
+      [:label {:for (str (todo :id))} (todo :name)]
+      [:noscript [:input {:type "submit" :value "Update"}]]]
      ]))
 
 (defn todo-form [todo]
@@ -25,7 +29,7 @@
      [:button {:disabled true} "📝"]
      [:form {:hx-patch (str "/todos/" (todo :id)), :hx-target "closest li", :hx-swap "outerHTML" :method "POST" :action (str "/todos/" (todo :id) "/edit")}
       [:input {:type "hidden" :name "done" :value (str (todo :done))}]
-      [:input {:type "text", :name "name" :value (todo :name)} ]
+      [:input {:type "text", :name "name" :value (todo :name)}]
       [:input {:type "submit"}]]
      ]))
 
@@ -47,14 +51,15 @@
   (page/html5
     [:body
      [:script {:src "https://unpkg.com/htmx.org@1.9.0" :crossorigin "anonymous"}]
+     [:script {:src "https://unpkg.com/hyperscript.org@0.9.8" :crossorigin "anonymous"}]
      [:link {:rel "stylesheet" :href "/static/styles.css"}]
      [:section
       [:h1 "TODO"]
       (render-search)
       (render-todos todos)
       [:form {:hx-post "/todos" :hx-target "#todos" :method "post" :action "/todos"}
-       [:input {:type "text" :name "todo-name"}]
-       [:input {:type "submit"}]]]
+       [:label "Add Todo "
+        [:input {:type "text" :name "todo-name"}]]]]
      ]
     )
   )
@@ -86,18 +91,22 @@ li {
 
 ul {
   padding:0;
-  margin: 0;
+  margin: 0 0 1em 0;
   display: block;
   list-style: none;
 }
 
 label input {
     width: 100%;
-    margin-left: 1em;
 }
 
-label {
-   display: flex;
+input[type=submit] {
+  width: auto;
+}
+
+li label {
+   display: inline-block;
+   margin-left: 1em;
 }
 
 button {
