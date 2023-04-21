@@ -21,12 +21,11 @@
   (fn [req] (let [new-status (-> req :params :done parse-boolean)
                   new-name (-> req :params :name)
                   id (id-from-request req)
-                  is-htmx (get-in req [:headers "hx-request"])
-                  todos (todo/find-by-id (get-todos) id)]
+                  is-htmx (get-in req [:headers "hx-request"])]
               (do
                 (edit-todo id new-status new-name)
                 (if is-htmx
-                  (view/todo-fragment todos)
+                  (view/todo-fragment (todo/find-by-id (get-todos) id))
                   (redirect "/"))))))
 
 (defn handle-get-todos [get-todos]
