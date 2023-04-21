@@ -1,44 +1,13 @@
-# todo
+# todo with htmx spike: clojure remix
 
-FIXME: description
+spiking out a todo list with htmx. This is another version of [the original written in Go in December 2022](https://github.com/quii/todo)
 
-## Installation
+all the fluid UI fun of an SPA with none of the pain
 
-Download from http://example.com/FIXME.
+works with JS turned off too
 
-## Usage
+![image](https://user-images.githubusercontent.com/631756/205446910-2196c5e5-ffe5-418d-b468-9523d0d2d954.png)
 
-FIXME: explanation
+## notes, thoughts etc
 
-    $ java -jar todo-0.1.0-standalone.jar [args]
-
-## Options
-
-FIXME: listing of options this app accepts.
-
-## Examples
-
-...
-
-### Bugs
-
-...
-
-### Any Other Sections
-### That You Think
-### Might be Useful
-
-## License
-
-Copyright © 2023 FIXME
-
-This program and the accompanying materials are made available under the
-terms of the Eclipse Public License 2.0 which is available at
-http://www.eclipse.org/legal/epl-2.0.
-
-This Source Code may also be made available under the following Secondary
-Licenses when the conditions for such availability set forth in the Eclipse
-Public License, v. 2.0 are satisfied: GNU General Public License as published by
-the Free Software Foundation, either version 2 of the License, or (at your
-option) any later version, with the GNU Classpath Exception which is available
-at https://www.gnu.org/software/classpath/license.html.
+[see the twitter thread for videos, thoughts, etc](https://twitter.com/quii/status/1598987894865113088)
