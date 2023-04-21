@@ -5,14 +5,16 @@
 (defn- render-todo [todo]
   (do
     [:li
+     [:form {:method "POST" :action (str "/todos/" (todo :id) "/delete")}
+      [:button {:hx-target "closest li" :hx-swap "outerHTML" :hx-delete (str "/todos/" (todo :id))} "❌"]]
+     [:form {:method "GET" :action (str "/todos/" (todo :id) "/edit")}
+      [:button {:hx-target "closest li" :hx-swap "outerHTML" :hx-get (str "/todos/" (todo :id))} "\uD83D\uDCDD"]]
      [:form
       {:hx-swap   "outerHTML"
        :hx-target "closest li"
        :class     (when (todo :done) "done")}
       [:input {:type "hidden" :name "done" :value (str (not (todo :done)))}]
       [:input {:type "hidden" :name "name" :value (todo :name)}]
-      [:button {:hx-target "closest li" :hx-swap "outerHTML" :hx-delete (str "/todos/" (todo :id))} "❌"]
-      [:button {:hx-target "closest li" :hx-swap "outerHTML" :hx-get (str "/todos/" (todo :id))} "\uD83D\uDCDD"]
       [:span {:hx-patch (str "/todos/" (todo :id))} (todo :name)]]
      ]))
 

@@ -35,10 +35,13 @@
                 (view/index todos)))))
 
 (defn handle-delete-todo [delete-todo]
-  (fn [req] (let [id (id-from-request req)]
+  (fn [req] (let [id (id-from-request req)
+                  is-htmx (get-in req [:headers "hx-request"])]
               (do
                 (delete-todo id)
-                (str "")))))
+                (if is-htmx
+                  (str "")
+                  (redirect "/"))))))
 
 (defn handle-get-todo [get-todos]
   (fn [req] (let [id (id-from-request req)
@@ -56,6 +59,7 @@
                (POST "/todos" _ (handle-new-todo get-todos add-todo))
                (PATCH "/todos/:id" _ (handle-patch-todo get-todos edit-todo))
                (GET "/todos/:id" _ (handle-get-todo get-todos))
+               (POST "/todos/:id/delete" _ (handle-delete-todo delete-todo))
                (DELETE "/todos/:id" _ (handle-delete-todo delete-todo)))
     (assoc site-defaults :security false)))
 
