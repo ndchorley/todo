@@ -37,12 +37,10 @@
 (defn todo-fragment [todo] (-> todo render-todo html))
 
 (defn render-todos [todos]
-  [:div
-   [:ul {:id "todos"}
-    (map render-todo todos)]
-   [:div {:class "empty-state"}
-    [:p "Congrats, you have no todos! Or... do you? 😰"]]
-   ])
+  (html [:ul {:id "todos"}
+         (map render-todo todos)]
+        [:div {:class "empty-state"}
+         [:p "Congrats, you have no todos! Or... do you? 😰"]]))
 
 (defn todos-fragment [todos] (-> todos render-todos html))
 
@@ -136,6 +134,10 @@ ul:empty, .empty-state {
 
 ul:empty + .empty-state {
   display: block;
+}
+
+form:has(+ ul:empty) {
+  display:none;
 }
 
 .done {
