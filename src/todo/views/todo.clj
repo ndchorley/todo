@@ -3,34 +3,36 @@
             [hiccup.core :refer :all]))
 
 (defn- render-todo [todo]
-  (do
-    [:li
-     [:form {:method "POST" :action (str "/todos/" (todo :id) "/delete")}
-      [:button {:hx-target "closest li" :hx-swap "outerHTML" :hx-delete (str "/todos/" (todo :id))} "❌"]]
-     [:form {:method "GET" :action (str "/todos/" (todo :id))}
-      [:button {:hx-target "closest li" :hx-swap "outerHTML" :hx-get (str "/todos/" (todo :id))} "\uD83D\uDCDD"]]
-     [:form
-      {:hx-swap   "outerHTML"
-       :hx-target "closest li"
-       :method    "POST"
-       :action    (str "/todos/" (todo :id) "/edit")
-       :class     (when (todo :done) "done")}
-      [:input {:type "hidden" :name "done" :value (str (not (todo :done)))}]
-      [:input {:type "hidden" :name "name" :value (todo :name)}]
-      [:noscript [:input {:type "submit" :value (if (todo :done) "Set as Not Done" "Set as Done")}]]
-      [:span {:for (str (todo :id)) :hx-patch (str "/todos/" (todo :id))} (todo :name)]]
-     ]))
+  (let [base-uri (str "/todos/" (todo :id))]
+    (do
+      [:li
+       [:form {:method "POST" :action (str base-uri "/delete")}
+        [:button {:hx-target "closest li" :hx-swap "outerHTML" :hx-delete base-uri} "❌"]]
+       [:form {:method "GET" :action base-uri}
+        [:button {:hx-target "closest li" :hx-swap "outerHTML" :hx-get base-uri} "\uD83D\uDCDD"]]
+       [:form
+        {:hx-swap   "outerHTML"
+         :hx-target "closest li"
+         :method    "POST"
+         :action    (str base-uri "/edit")
+         :class     (when (todo :done) "done")}
+        [:input {:type "hidden" :name "done" :value (str (not (todo :done)))}]
+        [:input {:type "hidden" :name "name" :value (todo :name)}]
+        [:noscript [:input {:type "submit" :value (if (todo :done) "Set as Not Done" "Set as Done")}]]
+        [:span {:for (str (todo :id)) :hx-patch base-uri} (todo :name)]]
+       ])))
 
 (defn todo-form [todo]
-  (html
-    [:li
-     [:button {:disabled true} "❌"]
-     [:button {:disabled true} "📝"]
-     [:form {:hx-patch (str "/todos/" (todo :id)), :hx-target "closest li", :hx-swap "outerHTML" :method "POST" :action (str "/todos/" (todo :id) "/edit")}
-      [:input {:type "hidden" :name "done" :value (str (todo :done))}]
-      [:input {:type "text", :name "name" :value (todo :name)}]
-      [:input {:type "submit"}]]
-     ]))
+  (let [base-uri (str "/todos/" (todo :id))]
+    (html
+      [:li
+       [:button {:disabled true} "❌"]
+       [:button {:disabled true} "📝"]
+       [:form {:hx-patch base-uri, :hx-target "closest li", :hx-swap "outerHTML" :method "POST" :action (str base-uri "/edit")}
+        [:input {:type "hidden" :name "done" :value (str (todo :done))}]
+        [:input {:type "text", :name "name" :value (todo :name)}]
+        [:input {:type "submit"}]]
+       ])))
 
 (defn todo-fragment [todo] (-> todo render-todo html))
 
