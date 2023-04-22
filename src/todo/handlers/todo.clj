@@ -19,46 +19,39 @@
 (defn handle-new-todo [get-todos, add-todo]
   (fn [req] (let [new-todo (-> req :params :todo-name)]
               (add-todo new-todo)
-              (htmx-or-vanilla
-                req
-                (view/todos-fragment (get-todos))
-                (redirect "/")))))
-
-
+              (htmx-or-vanilla req
+                               (view/todos-fragment (get-todos))
+                               (redirect "/")))))
 
 (defn handle-patch-todo [get-todos, edit-todo]
   (fn [req] (let [new-status (-> req :params :done parse-boolean)
                   new-name (-> req :params :name)
-                  id (id-from-request req)
-                  is-htmx (is-htmx? req)]
+                  id (id-from-request req)]
               (edit-todo id new-status new-name)
-              (if is-htmx
-                (view/todo-fragment (todo/find-by-id (get-todos) id))
-                (redirect "/")))))
+              (htmx-or-vanilla req
+                               (view/todo-fragment (todo/find-by-id (get-todos) id))
+                               (redirect "/")))))
 
 (defn handle-get-todos [get-todos]
   (fn [req] (let [search (-> req :params (get :search ""))
-                  is-htmx (is-htmx? req)
                   todos (todo/search (get-todos) search)]
-              (if is-htmx
-                (view/todos-fragment todos)
-                (view/index todos)))))
+              (htmx-or-vanilla req
+                               (view/todos-fragment todos)
+                               (view/index todos)))))
 
 (defn handle-delete-todo [delete-todo]
-  (fn [req] (let [id (id-from-request req)
-                  is-htmx (is-htmx? req)]
+  (fn [req] (let [id (id-from-request req)]
               (delete-todo id)
-              (if is-htmx
-                (str "")
-                (redirect "/")))))
+              (htmx-or-vanilla req
+                               (str "")
+                               (redirect "/")))))
 
 (defn handle-get-todo [get-todos]
   (fn [req] (let [id (id-from-request req)
-                  todo (todo/find-by-id (get-todos) id)
-                  is-htmx (is-htmx? req)]
-              (if is-htmx
-                (view/todo-form todo)
-                (view/furniture (view/todo-form todo))))))
+                  todo (todo/find-by-id (get-todos) id)]
+              (htmx-or-vanilla req
+                               (view/todo-form todo)
+                               (view/furniture (view/todo-form todo))))))
 
 (defn new-router [get-todos add-todo edit-todo delete-todo]
   (wrap-defaults
