@@ -22,6 +22,7 @@
     (testing "add new todo"
       (let [response (todo-router (->
                                     (mock/request :post "/todos")
+                                    (mock/header "HX-Request" "true")
                                     (mock/content-type "application/x-www-form-urlencoded")
                                     (mock/body "todo-name=new todo")))]
         (is (= 200 (:status response)))
@@ -30,6 +31,7 @@
       (let [first-item (-> (get-todos) first :id)
             response (todo-router (->
                                     (mock/request :patch (str "/todos/" first-item))
+                                    (mock/header "HX-Request" "true")
                                     (mock/content-type "application/x-www-form-urlencoded")
                                     (mock/body "done=true&name=Learn Scheme")))]
         (is (= 200 (:status response)))
@@ -37,7 +39,8 @@
     (testing "delete todo"
       (let [first-item (-> (get-todos) first :id)
             response (todo-router (->
-                                    (mock/request :delete (str "/todos/" first-item))))]
+                                    (mock/request :delete (str "/todos/" first-item))
+                                    (mock/header "HX-Request" "true")))]
         (is (= 200 (:status response)))
         (is (not (in? (-> (get-todos) todo/remove-ids) {:name "Learn Clojure" :done true})))))))
 

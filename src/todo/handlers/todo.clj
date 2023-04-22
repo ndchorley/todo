@@ -57,7 +57,7 @@
 
 (defn new-router [get-todos add-todo edit-todo delete-todo]
   (wrap-defaults
-    (defroutes router
+    (defroutes _
                (GET "/" [] (view/index (get-todos)))
                (GET "/static/styles.css" [] {:status 200 :headers {"Content-Type" "text/css"} :body view/css})
                (GET "/todos" _ (handle-get-todos get-todos))
