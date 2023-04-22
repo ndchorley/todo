@@ -37,8 +37,12 @@
 (defn todo-fragment [todo] (-> todo render-todo html))
 
 (defn render-todos [todos]
-  [:ul {:id "todos"}
-   (map render-todo todos)])
+  [:div
+   [:ul {:id "todos"}
+    (map render-todo todos)]
+   [:div {:class "empty-state"}
+    [:p "Congrats, you have no todos! Or... do you? 😰"]]
+   ])
 
 (defn todos-fragment [todos] (-> todos render-todos html))
 
@@ -46,12 +50,12 @@
   [:form {:method "GET" :action "/todos"}
    [:label "Search "
     [:input
-     {:type "text", :name "search", :placeholder "Begin Typing To Search", :hx-get "/todos", :hx-trigger "keyup changed delay:500ms, search", :hx-target "#todos", :hx-replace "innerHTML"}]]])
+     {:type "text", :name "search", :placeholder "Begin Typing To Search", :hx-get "/todos", :hx-trigger "keyup changed, search", :hx-target "#todos", :hx-replace "innerHTML"}]]])
 
 (def add-todo-form
   [:form {:hx-post "/todos" :hx-target "#todos" :method "post" :action "/todos"}
    [:label "Add Todo "
-    [:input {:type "text" :name "todo-name"}]]] )
+    [:input {:type "text" :name "todo-name"}]]])
 
 ;; refactor below to extract out everything up to h1
 (defn furniture [children]
@@ -124,6 +128,14 @@ button:focus {
 
 form {
     display: inline;
+}
+
+ul:empty, .empty-state {
+  display: none;
+}
+
+ul:empty + .empty-state {
+  display: block;
 }
 
 .done {
