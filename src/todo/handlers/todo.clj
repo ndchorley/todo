@@ -12,9 +12,9 @@
   (get-in req [:headers "hx-request"]))
 
 (defmacro htmx-or-vanilla
-  "will run the htmx render if the request is an htmx request, otherwise it will run the vanilla render"
-  [req htmx-render vanilla-render]
-  (list 'if (list 'is-htmx? req) htmx-render vanilla-render))
+  "will run the htmx response if the request is an htmx request, otherwise it will run the vanilla response"
+  [req htmx-response vanilla-response]
+  (list 'if (list 'is-htmx? req) htmx-response vanilla-response))
 
 (defn handle-new-todo [get-todos, add-todo]
   (fn [req] (let [new-todo (-> req :params :todo-name)]
@@ -42,9 +42,7 @@
 (defn handle-delete-todo [delete-todo]
   (fn [req] (let [id (id-from-request req)]
               (delete-todo id)
-              (htmx-or-vanilla req
-                               (str "")
-                               (redirect "/")))))
+              (htmx-or-vanilla req "" (redirect "/")))))
 
 (defn handle-get-todo [get-todos]
   (fn [req] (let [id (id-from-request req)
