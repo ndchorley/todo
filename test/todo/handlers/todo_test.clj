@@ -44,3 +44,15 @@
         (is (= 200 (:status response)))
         (is (not (in? (-> (get-todos) todo/remove-ids) {:name "Learn Clojure" :done true})))))))
 
+(deftest htmx-or-vanilla-test
+  (testing "htmx response is sent when HX-Request header is present"
+    (let [response (htmx-or-vanilla (->
+                                      (mock/request :get "/")
+                                      (mock/header "HX-Request" "true"))
+                                    "HTMX response" "Vanilla response")]
+      (is (= "HTMX response" response))))
+  (testing "vanilla path when no HX-Request header is present in request"
+    (let [response (htmx-or-vanilla (-> (mock/request :get "/"))
+                                    "HTMX response" "Vanilla response")]
+      (is (= "Vanilla response" response))))
+  )

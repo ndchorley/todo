@@ -8,14 +8,19 @@
 (defn- id-from-request [req]
   (-> req :params :id))
 
-(defn- is-htmx? [req]
+(defn is-htmx? [req]
   (get-in req [:headers "hx-request"]))
 
+(defmacro htmx-or-vanilla
+  "will run the htmx render if the request is an htmx request, otherwise it will run the vanilla render"
+  [req htmx-render vanilla-render]
+  (list 'if (list 'is-htmx? req) htmx-render vanilla-render))
+
 (defn handle-new-todo [get-todos, add-todo]
-  (fn [req] (let [new-todo (-> req :params :todo-name)
-                  is-htmx (is-htmx? req)]
+  (fn [req] (let [new-todo (-> req :params :todo-name)]
               (add-todo new-todo)
-              (if is-htmx
+              (htmx-or-vanilla
+                req
                 (view/todos-fragment (get-todos))
                 (redirect "/")))))
 
