@@ -53,13 +53,13 @@
 (def add-todo-form
   [:form {:hx-post "/todos" :hx-target "#todos" :method "post" :action "/todos"}
    [:label "Add Todo "
-    [:input {:type "text" :name "todo-name"}]]])
+    [:input {:type "text" :name "todo-name" "_" "on keyup if the event's key is 'Enter' set my value to '' trigger keyup"}]]])
 
-;; refactor below to extract out everything up to h1
 (defn furniture [children]
   (page/html5
     [:body
      [:script {:src "https://unpkg.com/htmx.org@1.9.0" :crossorigin "anonymous"}]
+     [:script {:src "https://unpkg.com/hyperscript.org@0.9.8" :crossorigin "anonymous"}]
      [:link {:rel "stylesheet" :href "/static/styles.css"}]
      [:section
       [:h1 "TODO"]
