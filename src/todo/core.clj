@@ -13,6 +13,7 @@
         add-todo (fn [desc] (swap! todos todo/add desc))
         edit-todo (fn [id new-status new-name] (swap! todos todo/edit id new-status new-name))
         delete-todo (fn [id] (swap! todos todo/delete id))]
+    (println "Starting server on http://localhost:5001")
     (run-server
       (new-router get-todos add-todo edit-todo delete-todo)
       {:port 5001})))
