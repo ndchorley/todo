@@ -2,6 +2,8 @@
 
 spiking out a todo list with htmx. This is another version of [the original written in Go in December 2022](https://github.com/quii/todo)
 
+I have written a post describing how [HTMX is The Future](https://quii.dev/HTMX_is_the_Future) 
+
 all the fluid UI fun of an SPA with none of the pain
 
 works with JS turned off too
